@@ -1,4 +1,4 @@
-const { NotImplementedError } = require('../lib');
+const { NotImplementedError } = require("../lib");
 
 /**
  * Extract season from given date and expose the enemy scout!
@@ -11,11 +11,25 @@ const { NotImplementedError } = require('../lib');
  * getSeason(new Date(2020, 02, 31)) => 'spring'
  *
  */
-function getSeason(/* date */) {
-  // Remove line below and write your code here
-  throw new NotImplementedError('Not implemented');
+function getSeason(date) {
+  if (!date) {
+    return "Unable to determine the time of year!";
+  }
+
+  try {
+    date.getTime();
+  } catch (e) {
+    throw new Error("Invalid date!");
+  }
+
+  let m = date.getMonth() + 1;
+
+  if ((m >= 1 && m <= 2) || m == 12) return "winter";
+  if (m >= 3 && m <= 5) return "spring";
+  if (m >= 6 && m <= 8) return "summer";
+  if (m >= 9 && m <= 11) return "autumn";
 }
 
 module.exports = {
-  getSeason
+  getSeason,
 };

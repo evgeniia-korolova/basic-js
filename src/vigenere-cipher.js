@@ -1,4 +1,4 @@
-const { NotImplementedError } = require('../lib');
+const { NotImplementedError } = require("../lib");
 
 /**
  * Implement class VigenereCipheringMachine that allows us to create
@@ -20,14 +20,81 @@ const { NotImplementedError } = require('../lib');
  *
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  constructor(isDirect) {
+    this.isDirect = isDirect !== false;
+  }
+  encrypt(message, key) {
+    if (arguments.length < 2 || message === undefined || key === undefined) {
+      throw new Error("Incorrect arguments!");
+    }
+
+    const msgUpper = String(message).toUpperCase();
+    const keyUpper = String(key).toUpperCase();
+
+    if (keyUpper.length === 0) return msgUpper;
+
+    const result = [];
+    let keyIndex = 0;
+
+    for (let i = 0; i < msgUpper.length; i++) {
+      const charCode = msgUpper.charCodeAt(i);
+
+      if (charCode >= 65 && charCode <= 90) {
+        const msgIdx = charCode - 65;
+
+        const keyCharIdx = keyIndex % keyUpper.length;
+        const keyIdx = keyUpper.charCodeAt(keyCharIdx) - 65;
+
+        const encryptedIdx = (msgIdx + keyIdx) % 26;
+
+        result.push(String.fromCharCode(encryptedIdx + 65));
+        keyIndex++;
+      } else {
+        result.push(msgUpper[i]);
+      }
+    }
+
+    const finalString = result.join("");
+    return this.isDirect
+      ? finalString
+      : finalString.split("").reverse().join("");
   }
 
-  decrypt() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  decrypt(message, key) {
+    if (arguments.length < 2 || message === undefined || key === undefined) {
+      throw new Error("Incorrect arguments!");
+    }
+
+    const msgUpper = String(message).toUpperCase();
+    const keyUpper = String(key).toUpperCase();
+
+    if (keyUpper.length === 0) return msgUpper;
+
+    const result = [];
+    let keyIndex = 0;
+
+    for (let i = 0; i < msgUpper.length; i++) {
+      const charCode = msgUpper.charCodeAt(i);
+
+      if (charCode >= 65 && charCode <= 90) {
+        const msgIdx = charCode - 65;
+
+        const keyCharIdx = keyIndex % keyUpper.length;
+        const keyIdx = keyUpper.charCodeAt(keyCharIdx) - 65;
+
+        const decryptedIdx = (msgIdx - keyIdx + 26) % 26;
+
+        result.push(String.fromCharCode(decryptedIdx + 65));
+        keyIndex++;
+      } else {
+        result.push(msgUpper[i]);
+      }
+    }
+
+    const finalString = result.join("");
+    return this.isDirect
+      ? finalString
+      : finalString.split("").reverse().join("");
   }
 }
 
